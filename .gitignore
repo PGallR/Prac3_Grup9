@@ -1,0 +1,26 @@
+# Fitxers compilats de Java
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Carpetes de compilació
+bin/
+target/
+out/
+
+# Fitxers d'entorns de desenvolupament (IDE)
+.vscode/
+.idea/
+*.iml
+*.project
+*.classpath
+.settings/
+
+# Fitxers del sistema operatiu
+.DS_Store
+Thumbs.db
