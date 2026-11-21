@@ -8,7 +8,6 @@ public class LlistaMaquines {
     private static final int MIDA_STANDARD = 50;
     
     private Maquina[] llista;   // llista de dades de màquines
-    private int mida;           // mida total de la llista
     private int num_elem;       // punter al final de la llista
 
 
@@ -17,8 +16,7 @@ public class LlistaMaquines {
      */
     public LlistaMaquines(){
         llista = new Maquina[MIDA_STANDARD];
-        num_elem = 0;
-        this.mida = MIDA_STANDARD;     
+        num_elem = 0;   
     }
     
     /**
@@ -27,8 +25,7 @@ public class LlistaMaquines {
      */
     public LlistaMaquines(int mida){
         llista = new Maquina[mida];
-        num_elem = 0;
-        this.mida = mida;     
+        num_elem = 0;   
     }
 
     /**
@@ -126,23 +123,23 @@ public class LlistaMaquines {
         }
     }
 
-    for (int j = numElements; j > pos; j--) {       //desplaçar elements
-        elements[j] = elements[j - 1];
+    for (int j = num_elem; j > i; j--) {       //desplaçar elements
+        llista[j] = llista[j - 1];
     }
 
-    elem[i] = nova.copia();
+    llista[i] = nova.copia();
     num_elem++;
     }
 
     /**
-     * Escriu les dades de un tipus especific
+     * Escriu les dades de un tipus de maquina especific
      * @param tipus: 0=tot, 1=filament, 2=resina i 3=làser
      * @return llista de dades en format text segons el tipus triat
      */
-    public String mostrarDades(int tipus){
-        String aux = "LLISTA DE MAQUINES, amb elements: " + num_elem + " i mida maxima: "+mida+"\n";
+    public String mostrarDadesMaquines(int tipus){
+        String aux = "LLISTA DE MAQUINES, amb elements: " + num_elem + " i mida maxima: "+llista.length+"\n";
         
-        switch (opcio){
+        switch (tipus){
             case 0:	//Mostrar el conjunt de dades de la llista
                 for (int i=0; i<num_elem; i++){
                     aux = aux + "\nIndex: "+i+" "+llista[i];
@@ -205,7 +202,7 @@ public class LlistaMaquines {
      * @return si la llista està plena
      */
     private boolean llistaPlena(){
-        return (mida==num_elem);
+        return (llista.length==num_elem);
     }
 
     /**
@@ -230,11 +227,16 @@ public class LlistaMaquines {
     }
 
     /**
-     * Comprova si la mida de la llista és igual al nombre d'elements
-     * @return si la llista està plena
+     * Amplia la capacitat d'una llista de màquines al doble
      */
     private boolean ampliarCapacitat(){
-        return (mida==num_elem);
+        LlistaMaquines[] nova = new LlistaMaquines[llista.length * 2];      //augmenta la capacitat al doble
+        
+        for (int i = 0; i < num_elem; i++) {
+            nou[i] = llista[i];
+        }
+        
+        llista = nova;
     }
 
 }
