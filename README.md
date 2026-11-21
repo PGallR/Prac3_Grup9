@@ -6,7 +6,7 @@ Projecte de l'assignatura de Programació (Curs 2026-2027).
 *   **Director (PSI):** Pau Gall
 *   **Programadores:**
     *   Aesha Naz Mahmood
-    *   Prog2
+    *   Cèlia Borràs Castilla
     *   Prog3
     *   Prog4
 
