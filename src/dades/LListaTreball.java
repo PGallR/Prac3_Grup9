@@ -1,7 +1,8 @@
 package dades;
 
 import excepcions.*;
-import extra.*;
+import extras.*;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,5 +44,5 @@ public class LListaTreball implements Serializable {
         llista = nou;
     }
 
-    
+
 }

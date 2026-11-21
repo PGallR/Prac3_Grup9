@@ -1,6 +1,7 @@
-package extra;
+package extras;
 
-java.io.Serializable;
+import excepcions.*;
+import enumeracions.*;
 
 /**
  * Classe per guardar dates.

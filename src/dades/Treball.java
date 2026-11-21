@@ -1,11 +1,11 @@
 package dades;
 
-import extra.Data;
 import java.io.Serializable;
 
 import javax.management.openmbean.OpenDataException;
 
 import excepcions.*;
+import extras.Data;
 
 public class Treball {
     
