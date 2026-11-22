@@ -10,14 +10,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class LListaTreball implements Serializable {
+public class LlistaTreball implements Serializable {
     private static final int CAPACITAT_INICIAL = 50;
 
     private Treball[] llista;
     private int numElements;
 
 
-    public LListaTreball() {
+    public LlistaTreball() {
         this.llista = new Treball[CAPACITAT_INICIAL];
         this.numElements = 0;
     }
@@ -195,8 +195,8 @@ public class LListaTreball implements Serializable {
     }
 
 
-    public LlistaTreballs obtenirPendentsMaquina(String codiMaquina) {
-        LlistaTreballs resultat = new LlistaTreballs();
+    public LlistaTreball obtenirPendentsMaquina(String codiMaquina) {
+        LlistaTreball resultat = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
             if (t.getMaquina().getCodi().equalsIgnoreCase(codiMaquina)
@@ -208,8 +208,8 @@ public class LListaTreball implements Serializable {
     }
 
 
-    public LlistaTreballs obtenirPendentsUsuari(String aliesUsuari) {
-        LlistaTreballs resultat = new LlistaTreballs();
+    public LlistaTreball obtenirPendentsUsuari(String aliesUsuari) {
+        LlistaTreball resultat = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
             if (t.getUsuari().getAlies().equalsIgnoreCase(aliesUsuari)
@@ -220,8 +220,8 @@ public class LListaTreball implements Serializable {
         return resultat;
     }
 
-    public LlistaTreballs obtenirTotsPendents() {
-        LlistaTreballs pendents = new LlistaTreballs();
+    public LlistaTreball obtenirTotsPendents() {
+        LlistaTreball pendents = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
             if (llista[i].getEstat().equals(Treball.ESTAT_PENDENT)) {
                 pendents.inserirDirecte(llista[i]);
@@ -231,8 +231,8 @@ public class LListaTreball implements Serializable {
     }
 
 
-    public LlistaTreballs obtenirTreballsAcabatsUsuariMes(String aliesUsuari, int mes, int any) {
-        LlistaTreballs factura = new LlistaTreballs();
+    public LlistaTreball obtenirTreballsAcabatsUsuariMes(String aliesUsuari, int mes, int any) {
+        LlistaTreball factura = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
             Data dFi = t.getDataFinalitzacio();
@@ -248,8 +248,8 @@ public class LListaTreball implements Serializable {
     }
 
 
-    public LlistaTreballs obtenirTreballsAcabatsEntreDates(Data inici, Data fi) {
-        LlistaTreballs acabats = new LlistaTreballs();
+    public LlistaTreball obtenirTreballsAcabatsEntreDates(Data inici, Data fi) {
+        LlistaTreball acabats = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
             Data dFi = t.getDataFinalitzacio();
@@ -309,10 +309,10 @@ public class LListaTreball implements Serializable {
         }
     }
 
-    public static LlistaTreballs carregarSerialitzat(String rutaFitxer)
+    public static LlistaTreball carregarSerialitzat(String rutaFitxer)
             throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(rutaFitxer))) {
-            return (LlistaTreballs) ois.readObject();
+            return (LlistaTreball) ois.readObject();
         }
     }
 
