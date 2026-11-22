@@ -49,7 +49,7 @@ public class LlistaTreball implements Serializable {
         if (nouTreball == null) {
             throw new TreballNoValidException("No es pot afegir un treball nul.");
         }
-        if (cercarPerCodi(nouTreball.getCodi()) != null) {
+        if (cercarCodi(nouTreball.getCodi()) != null) {
             throw new TreballNoValidException("Ja existeix un treball amb el codi: " + nouTreball.getCodi());
         }
 
