@@ -7,7 +7,7 @@ Projecte de l'assignatura de Programació (Curs 2026-2027).
 *   **Programadores:**
     *   Aesha Naz Mahmood
     *   Cèlia Borràs Castilla
-    *   Prog3
+    *   Paula Bendicho Caballero
     *   Prog4
 
 ## 📝 Descripció
