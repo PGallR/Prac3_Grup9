@@ -7,8 +7,8 @@ Projecte de l'assignatura de Programació (Curs 2026-2027).
 *   **Programadores:**
     *   Aesha Naz Mahmood
     *   Cèlia Borràs Castilla
-    *   Prog3
-    *   Prog4
+    *   Paula Bendicho Caballero
+    *   María Paula López Medina
 
 ## 📝 Descripció
 Aplicació per gestionar un taller de fabricació digital (impressores 3D de filament, de resina i talladores làser). El projecte inclou una versió per consola i una versió amb interfície gràfica (SWING), persistència en fitxers de text i serialitzats, i un joc de proves unitàries.
