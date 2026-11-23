@@ -2,12 +2,12 @@ package dades;
 
 import java.io.Serializable;
 
-import javax.management.openmbean.OpenDataException;
+//import javax.management.openmbean.OpenDataException;
 
 import excepcions.*;
 import extras.Data;
 
-public class Treball {
+public class Treball implements Serializable {
     
     public static final String MATERIAL_FILAMENT = "filament";
     public static final String MATERIAL_RESINA = "resina";
@@ -24,11 +24,11 @@ public class Treball {
     private Data dataFinalitzacio;
     private double duradaH;
     private double quantitatMaterial;
-    //private Maquina maquina;
-    //private Usuari usuari;
+    private Maquina maquina;
+    private Usuari usuari;
 
-    public Treball(String codi, /*Maquina maquina, Usuari usuari,*/ String material, 
-                    Data dataSolicitud, double duradaH, double quantitatMaterial) {
+    public Treball(String codi, Maquina maquina, Usuari usuari, String material, 
+                    Data dataSolicitud, double duradaH, double quantitatMaterial) throws TreballNoValidException {
         
         if (codi == null || codi.trim().isEmpty()) {
             throw new TreballNoValidException("El treball ha de tenir una màquina i un usuari assignats.");
@@ -103,13 +103,13 @@ public class Treball {
         return codi;
     }
 
-    //public Maquina getMaquina() {
-    //    return maquina;
-    //}
+    public Maquina getMaquina() {
+        return maquina;
+    }
 
-    //public Usuari getUsuari() {
-    //    return usuari;
-    //}
+    public Usuari getUsuari() {
+        return usuari;
+    }
 
     public String getMaterial() {
         return material;

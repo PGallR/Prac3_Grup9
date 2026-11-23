@@ -441,7 +441,7 @@ public class Data {
             nova.hora += 1;
         }
 
-        nova.hora = hora;
+        nova.hora += hora;
         if (nova.hora >= 24){
             nova.hora -= 24;
             nova.dia += 1;

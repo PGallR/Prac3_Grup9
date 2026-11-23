@@ -54,9 +54,9 @@ public class LlistaTreball implements Serializable {
         }
 
         Usuari u = nouTreball.getUsuari();
-        int pendentsActuals = comptarTreballsPendentsUsuari(u.getAlies());
+        int pendentsActuals = comptarTreballsPendentsUsuari(u.getAlias());
         if (pendentsActuals >= u.getMaxTreballsPendents()) {
-            throw new TreballNoValidException("L'usuari " + u.getAlies()
+            throw new TreballNoValidException("L'usuari " + u.getAlias()
                     + " ja té el màxim permès de treballs pendents (" + u.getMaxTreballsPendents() + ").");
         }
 
@@ -118,7 +118,7 @@ public class LlistaTreball implements Serializable {
         int comptador = 0;
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
-            if (t.getUsuari().getAlies().equalsIgnoreCase(aliesUsuari)
+            if (t.getUsuari().getAlias().equalsIgnoreCase(aliesUsuari)
                     && (t.getEstat().equals(Treball.ESTAT_PENDENT) || t.getEstat().equals(Treball.ESTAT_EN_CURS))) {
                 comptador++;
             }
@@ -127,12 +127,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
-    public Treball obtenirTreballEnCurs(String codiMaquina) {
+    public Treball obtenirTreballEnCurs(int codiMaquina) {
         Treball enCurs = null;
         int i = 0;
         while (i < numElements && enCurs == null) {
             Treball t = llista[i];
-            if (t.getMaquina().getCodi().equalsIgnoreCase(codiMaquina)
+            if (t.getMaquina().getCodi() == codiMaquina 
                     && t.getEstat().equals(Treball.ESTAT_EN_CURS)) {
                 enCurs = t;
             }
@@ -142,12 +142,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
-    public Treball obtenirSeguentTreballPendent(String codiMaquina) {
+    public Treball obtenirSeguentTreballPendent(int codiMaquina) {
         Treball seguent = null;
         int i = 0;
         while (i < numElements && seguent == null) {
             Treball t = llista[i];
-            if (t.getMaquina().getCodi().equalsIgnoreCase(codiMaquina)
+            if (t.getMaquina().getCodi() == codiMaquina
                     && t.getEstat().equals(Treball.ESTAT_PENDENT)) {
                 seguent = t;
             }
@@ -156,7 +156,7 @@ public class LlistaTreball implements Serializable {
         return seguent;
     }
 
-    public Treball iniciarSeguentTreballMaquina(String codiMaquina) throws OperacioTreballNoPermesaException {
+    public Treball iniciarSeguentTreballMaquina(int codiMaquina) throws OperacioTreballNoPermesaException {
         if (obtenirTreballEnCurs(codiMaquina) != null) {
             throw new OperacioTreballNoPermesaException(
                     "La màquina " + codiMaquina + " ja té un treball en curs.");
@@ -170,7 +170,7 @@ public class LlistaTreball implements Serializable {
         return seguent;
     }
 
-    public Treball finalitzarTreballActualMaquina(String codiMaquina, Data dataFi)
+    public Treball finalitzarTreballActualMaquina(int codiMaquina, Data dataFi)
             throws OperacioTreballNoPermesaException {
         Treball enCurs = obtenirTreballEnCurs(codiMaquina);
         if (enCurs == null) {
@@ -182,11 +182,11 @@ public class LlistaTreball implements Serializable {
     }
 
 
-    public double calcularTempsEsperaMaquina(String codiMaquina) {
+    public double calcularTempsEsperaMaquina(int codiMaquina) {
         double horesTotals = 0.0;
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
-            if (t.getMaquina().getCodi().equalsIgnoreCase(codiMaquina)
+            if (t.getMaquina().getCodi() == codiMaquina
                     && (t.getEstat().equals(Treball.ESTAT_EN_CURS) || t.getEstat().equals(Treball.ESTAT_PENDENT))) {
                 horesTotals += t.getDuradaHores();
             }
@@ -195,11 +195,11 @@ public class LlistaTreball implements Serializable {
     }
 
 
-    public LlistaTreball obtenirPendentsMaquina(String codiMaquina) {
+    public LlistaTreball obtenirPendentsMaquina(int codiMaquina) {
         LlistaTreball resultat = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
-            if (t.getMaquina().getCodi().equalsIgnoreCase(codiMaquina)
+            if (t.getMaquina().getCodi() == codiMaquina
                     && t.getEstat().equals(Treball.ESTAT_PENDENT)) {
                 resultat.inserirDirecte(t);
             }
@@ -212,7 +212,7 @@ public class LlistaTreball implements Serializable {
         LlistaTreball resultat = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
-            if (t.getUsuari().getAlies().equalsIgnoreCase(aliesUsuari)
+            if (t.getUsuari().getAlias().equalsIgnoreCase(aliesUsuari)
                     && (t.getEstat().equals(Treball.ESTAT_PENDENT) || t.getEstat().equals(Treball.ESTAT_EN_CURS))) {
                 resultat.inserirDirecte(t);
             }
@@ -237,7 +237,7 @@ public class LlistaTreball implements Serializable {
             Treball t = llista[i];
             Data dFi = t.getDataFinalitzacio();
             if (t.getEstat().equals(Treball.ESTAT_ACABAT)
-                    && t.getUsuari().getAlies().equalsIgnoreCase(aliesUsuari)
+                    && t.getUsuari().getAlias().equalsIgnoreCase(aliesUsuari)
                     && dFi != null
                     && dFi.getMes() == mes
                     && dFi.getAny() == any) {
@@ -264,13 +264,13 @@ public class LlistaTreball implements Serializable {
     }
 
 
-    public double calcularHoresUsMaquinaEntreDates(String codiMaquina, Data inici, Data fi) {
+    public double calcularHoresUsMaquinaEntreDates(int codiMaquina, Data inici, Data fi) {
         double hores = 0.0;
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
             Data dFi = t.getDataFinalitzacio();
             if (t.getEstat().equals(Treball.ESTAT_ACABAT)
-                    && t.getMaquina().getCodi().equalsIgnoreCase(codiMaquina)
+                    && t.getMaquina().getCodi() == codiMaquina
                     && dFi != null
                     && !dFi.esDataInferior(inici)
                     && !fi.esDataInferior(dFi)) {
@@ -286,7 +286,7 @@ public class LlistaTreball implements Serializable {
         for (int i = 0; i < numElements; i++) {
             Treball t = llista[i];
             if (t.getEstat().equals(Treball.ESTAT_ACABAT)
-                    && t.getUsuari().getAlies().equalsIgnoreCase(aliesUsuari)) {
+                    && t.getUsuari().getAlias().equalsIgnoreCase(aliesUsuari)) {
                 hores += t.getDuradaHores();
             }
         }
