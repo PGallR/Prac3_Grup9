@@ -1,6 +1,6 @@
 package dades;
 
-import excepcions.*;                                /*FALTA TRACTAMENT D'ERRORS!!!! */
+import excepcions.*;
 
 public class LlistaUsuaris {
     
@@ -38,14 +38,14 @@ public class LlistaUsuaris {
    /**
      * Permet obtenir l'Nessim element de la llista de maquines
      * @param index rep posicio de les dades que es vol consultar
-     * @return retorna les dades, null si es troba fora de rang
+     * @return retorna les dades
      */
     public Usuari getUsuari(int index){
         if(index>=0 && index<num_elem){
             return llista[index];
         }
         else{
-            return null;                                //POSSIBLE EXCEPTION (CONTROL D'ERRORS PENDENT)
+            throw new UsuariNoValidException("No hi ha cap usuari que correspon.\n"); 
         }
     }
 
@@ -55,25 +55,29 @@ public class LlistaUsuaris {
      */
     public void afegirUsuari(Usuari nou) {
     
-        /*CONTROLAR SI == NULL????*/
-    if (llistaPlena()) {
-        ampliarCapacitat();
-    }
-
-    if(trobarUsuari(nova.getAlias()==-1)){             //no esta previament a la llista / EXEPTION???
-        int i=0;
-
-        while((i<num_elem)&&(llista[i].getAlias().compareTo(nova.getAlias())<0)){         //ordenar llista segons el codi
-            i++;
+    if (nou == null){
+        throw new UsuariNoValidException("No hi ha cap usuari que correspon.\n"); 
+    }else{
+        if (llistaPlena()) {
+            ampliarCapacitat();
         }
-    }
 
-    for (int j = num_elem; j > i; j--) {       //desplaçar elements
-        llista[j] = llista[j - 1];
-    }
+        if(trobarUsuari(nova.getAlias()==-1)){
+            int i=0;
 
-    llista[i] = nova.copia();
-    num_elem++;
+            while((i<num_elem)&&(llista[i].getAlias().compareTo(nova.getAlias())<0)){         //ordenar llista segons el codi
+                i++;
+            }
+        }
+
+        for (int j = num_elem; j > i; j--) {       //desplaçar elements
+            llista[j] = llista[j - 1];
+        }
+
+        llista[i] = nova.copia();
+        num_elem++;
+        }
+    
     }
 
     
@@ -86,28 +90,28 @@ public class LlistaUsuaris {
         String aux = "LLISTA D'USUARIS, amb elements: " + num_elem + " i mida maxima: "+llista.length+"\n";
         
         switch (tipus){
-            case 0:	//Mostrar el conjunt de dades de la llista
+            case 0:	
                 for (int i=0; i<num_elem; i++){
                     aux = aux + "\nIndex: "+i+" "+llista[i];
                 }
 
-            case 1:	//Eliminar el conjunt de dades d'un municipi
+            case 1:
                 for (int i=0; i<num_elem; i++){
                     if(llista[i] instanceof Estudiant){
                         aux = aux + "\nIndex: "+i+" "+llista[i];
                     }     
                 }
 
-            case 2:	//Mostrar la informació del municipi amb major frac orgànica per habitant
+            case 2:
                 for (int i=0; i<num_elem; i++){
                     if(llista[i] instanceof Investigador){
                         aux = aux + "\nIndex: "+i+" "+llista[i];
                     }     
                 }
 
-            case 3:	//Mostrar els registres d'un municipi, tots els anys
+            case 3:
                 for (int i=0; i<num_elem; i++){
-                    if(llista[i] instanceof ImpressoraEmpresa){
+                    if(llista[i] instanceof Empresa){
                         aux = aux + "\nIndex: "+i+" "+llista[i];
                     }     
                 }
@@ -119,26 +123,33 @@ public class LlistaUsuaris {
     /**
      * Mostra les dades d'un usuari segons el seu alias
      * @param alias de l'usuari que es vol tractar
-     * @return dades de l'usuari, null si no existeix                     EXEPTION????
+     * @return dades de l'usuari
      */
     public String mostrarUsuari(String alias){
         String aux = null;
 
         int index = trobarUsuari(alias);
-        if(index != -1){                                                        /*POSSIBLE TRACTAMENT D'ERRORS */
+        if(index != -1){                     
             aux = "USUARI: " +llista[i]+"\n";
+        }else{
+            throw new UsuariNoValidException("No s'ha pogut trobar l'usuari.\n");
         }
               
         return aux;
     }
 
+    /**
+     * Mostra el usuari d'un tipus que més hores ha fet servir les màquines
+     * @param alias de l'usuari que es vol tractar
+     * @return dades de l'usuari
+     */
     /*public Usuari mesHores(int tipus){
-        Usuari max;
+        Usuari max = null;
         
-        FALTA CODI DE MÈTODE: Calcular usuari d’un cert tipus que ha fet servir més hores de màquina 
+        FORMA PART DEL MAIN??
               
         return max;
-    } */
+    }*/
 
 
     /*------------------------------------- PRIVATES ----------------------------------------------- */
@@ -159,7 +170,6 @@ public class LlistaUsuaris {
     private int trobarUsuari(String alias){
         int i = 0;
         boolean trobat = false;
-        String aux = null;
 
         while(i<num_elem && !trobat){
             if(llista[i].getAlias().equalsIgnoreCase(alias)){
@@ -167,7 +177,7 @@ public class LlistaUsuaris {
             }
             else{i++;}
         }
-        if (!trobat){i=-1;}                 /*POSSIBLE TRACTAMENT D'ERRORS */
+        if (!trobat){i=-1;}                 
         
         return i;
     }

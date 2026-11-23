@@ -1,6 +1,6 @@
 package dades;
 
-import excepcions.*;                                /*FALTA TRACTAMENT D'ERRORS!!!! */
+import excepcions.*;
 import extras.*;
 
 public class LlistaMaquines {
@@ -46,7 +46,7 @@ public class LlistaMaquines {
             return llista[index];
         }
         else{
-            return null;                                //POSSIBLE EXCEPTION (CONTROL D'ERRORS PENDENT)
+            throw new MaquinaNoValidException("No hi ha cap maquina que correspon.\n");
         }
     }
 
@@ -54,81 +54,91 @@ public class LlistaMaquines {
      * Afegeix una impressora de filament a la llista
      * @param nova impressora 3D de filament a afegir
      */
-    public void afegirImpressoraFilament(ImpressoraFilament nova) {
+    public void afegirMaquinaFilament(MaquinaFilament nova) {
     
-        /*CONTROLAR SI == NULL????*/
-    if (llistaPlena()) {
-        ampliarCapacitat();
-    }
-
-    if(trobarCodi(nova.getCodi()==-1)){             //no esta previament a la llista / EXEPTION???
-        int i=0;
-
-        while((i<num_elem)&&(llista[i].getCodi().compareTo(nova.getCodi())<0)){         //ordenar llista segons el codi
-            i++;
+    if (nova == null){
+        throw new MaquinaNoValidException("No hi ha cap maquina que correspon.\n"); 
+    }else{
+        if (llistaPlena()) {
+            ampliarCapacitat();
         }
-    }
 
-    for (int j = numElements; j > pos; j--) {       //desplaçar elements
-        elements[j] = elements[j - 1];
-    }
+        if(trobarCodi(nova.getCodi()==-1)){             //no esta previament a la llista
+            int i=0;
 
-    elem[i] = nova.copia();
-    num_elem++;
+            while((i<num_elem)&&(llista[i].getCodi() < nova.getCodi())){         //ordenar llista segons el codi
+                i++;
+            }
+        }
+
+        for (int j = numElements; j > pos; j--) {       //desplaçar elements
+            elements[j] = elements[j - 1];
+        }
+
+        elem[i] = nova.copia();
+        num_elem++;
+    }
+    
     }
 
     /**
      * Afegeix una impressora de resina a la llista
      * @param nova impressora 3D de resina a afegir
      */
-    public void afegirImpressoraResina(ImpressoraResina nova) {
+    public void afegirMaquinaResina(MaquinaResina nova) {
     
-        /*CONTROLAR SI == NULL????*/
-    if (llistaPlena()) {
-        ampliarCapacitat();
-    }
-
-    if(trobarCodi(nova.getCodi()==-1)){             //no esta previament a la llista / EXEPTION???
-        int i=0;
-
-        while((i<num_elem)&&(llista[i].getCodi().compareTo(nova.getCodi())<0)){         //ordenar llista segons el codi
-            i++;
+    if (nova == null){
+        throw new MaquinaNoValidException("No hi ha cap maquina que correspon.\n"); 
+    }else{
+        if (llistaPlena()) {
+            ampliarCapacitat();
         }
-    }
 
-    for (int j = numElements; j > pos; j--) {       //desplaçar elements
-        elements[j] = elements[j - 1];
-    }
+        if(trobarCodi(nova.getCodi()==-1)){             //no esta previament a la llista
+            int i=0;
 
-    elem[i] = nova.copia();
-    num_elem++;
+            while((i<num_elem)&&(llista[i].getCodi() < nova.getCodi())){         //ordenar llista segons el codi
+                i++;
+            }
+        }
+
+        for (int j = numElements; j > pos; j--) {       //desplaçar elements
+            elements[j] = elements[j - 1];
+        }
+
+        elem[i] = nova.copia();
+        num_elem++;
+    }
     }
 
     /**
      * Afegeix una talladora laser a la llista
      * @param nova impressora laser a afegir
      */
-    public void afegirImpressoraLaser(ImpressoraLaser nova) {
+    public void afegirMaquinaLaser(MaquinaLaser nova) {
     
-        /*CONTROLAR SI == NULL????*/
-    if (llistaPlena()) {
-        ampliarCapacitat();
-    }
-
-    if(trobarCodi(nova.getCodi()==-1)){             //no esta previament a la llista / EXEPTION???
-        int i=0;
-
-        while((i<num_elem)&&(llista[i].getCodi().compareTo(nova.getCodi())<0)){         //ordenar llista segons el codi
-            i++;
+    if (nova == null){
+        throw new MaquinaNoValidException("No hi ha cap maquina que correspon.\n"); 
+    }else{
+        if (llistaPlena()) {
+            ampliarCapacitat();
         }
-    }
 
-    for (int j = num_elem; j > i; j--) {       //desplaçar elements
-        llista[j] = llista[j - 1];
-    }
+        if(trobarCodi(nova.getCodi()==-1)){             //no esta previament a la llista
+            int i=0;
 
-    llista[i] = nova.copia();
-    num_elem++;
+            while((i<num_elem)&&(llista[i].getCodi() < nova.getCodi())){         //ordenar llista segons el codi
+                i++;
+            }
+        }
+
+        for (int j = num_elem; j > i; j--) {       //desplaçar elements
+            llista[j] = llista[j - 1];
+        }
+
+        llista[i] = nova.copia();
+        num_elem++;
+    }
     }
 
     /**
@@ -140,28 +150,28 @@ public class LlistaMaquines {
         String aux = "LLISTA DE MAQUINES, amb elements: " + num_elem + " i mida maxima: "+llista.length+"\n";
         
         switch (tipus){
-            case 0:	//Mostrar el conjunt de dades de la llista
+            case 0:	
                 for (int i=0; i<num_elem; i++){
                     aux = aux + "\nIndex: "+i+" "+llista[i];
                 }
 
-            case 1:	//Eliminar el conjunt de dades d'un municipi
+            case 1:	
                 for (int i=0; i<num_elem; i++){
-                    if(llista[i] instanceof ImpressoraFilament){
+                    if(llista[i] instanceof MaquinaFilament){
                         aux = aux + "\nIndex: "+i+" "+llista[i];
                     }     
                 }
 
-            case 2:	//Mostrar la informació del municipi amb major frac orgànica per habitant
+            case 2:	
                 for (int i=0; i<num_elem; i++){
-                    if(llista[i] instanceof ImpressoraResina){
+                    if(llista[i] instanceof MaquinaResina){
                         aux = aux + "\nIndex: "+i+" "+llista[i];
                     }     
                 }
 
-            case 3:	//Mostrar els registres d'un municipi, tots els anys
+            case 3:	
                 for (int i=0; i<num_elem; i++){
-                    if(llista[i] instanceof ImpressoraLaser){
+                    if(llista[i] instanceof MaquinaLaser){
                         aux = aux + "\nIndex: "+i+" "+llista[i];
                     }     
                 }
@@ -173,14 +183,16 @@ public class LlistaMaquines {
     /**
      * Mostra les dades de una maquina segons el seu codi
      * @param codi de la màquina que es vol tractar
-     * @return dades de la maquina, null si no existeix                     EXEPTION????
+     * @return dades de la maquina
      */
     public String mostrarMaquina(int codi){
         String aux = null;
 
         int index = trobarCodi(codi);
-        if(index != -1){                                                        /*POSSIBLE TRACTAMENT D'ERRORS */
+        if(index != -1){                                                      
             aux = "MAQUINA: " +llista[i]+"\n";
+        }else{
+            throw new MaquinaNoValidException("No hi ha cap maquina que correspon amb el codi indicat.\n");
         }
               
         return aux;
@@ -213,7 +225,6 @@ public class LlistaMaquines {
     private int trobarCodi(int codi){
         int i = 0;
         boolean trobat = false;
-        String aux = null;
 
         while(i<num_elem && !trobat){
             if(llista[i].getCodi() == codi){
