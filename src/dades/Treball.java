@@ -47,7 +47,7 @@ public class Treball {
         }
 
         this.codi = codi;
-        //this.maquina = maquina;
+        this.maquina = maquina;
         this.usuari = usuari;
         this.material = material;
         this.dataSolicitud = dataSolicitud;
