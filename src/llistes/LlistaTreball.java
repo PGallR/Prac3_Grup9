@@ -1,14 +1,15 @@
-package dades;
+package llistes;
 
 import excepcions.*;
 import extras.*;
-
+import dades.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
 
 public class LlistaTreball implements Serializable {
     private static final int CAPACITAT_INICIAL = 50;
@@ -17,25 +18,45 @@ public class LlistaTreball implements Serializable {
     private int numElements;
 
 
+    /**
+     * Constructor Llista Treball
+     */
     public LlistaTreball() {
         this.llista = new Treball[CAPACITAT_INICIAL];
         this.numElements = 0;
     }
 
 
+    /**
+     * Metode que retorna el numero d'elements a la llista
+     * 
+     * @return int; num elements a la llista
+     */
     public int getNumElements() {
         return numElements;
     }
 
-    public Treball obtenirT (int index) {
-        Treball resultat = null;
+
+    /**
+     * Metode que permet obtenir el Treball demanat
+     * 
+     * @param index posicio de la dada que es vol consultar
+     * @return retorna les dades Treball, sino null
+     * @throws TreballNoValidException
+     */
+    public Treball getTreball(int index) throws TreballNoValidException {
+
         if (index >= 0 && index < numElements) {
-            resultat = llista[index];
+            return llista[index];
+        } else {
+            throw new TreballNoValidException("No hi ha cap treball");
         }
-        return resultat;
     }
 
 
+    /**
+     * Metode que amplia la capacitat de la llista
+     */
     private void ampliarCapacitat() {
         Treball[] nou = new Treball[llista.length * 2];
         for (int i = 0; i < numElements; i++) {
@@ -45,6 +66,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que permet afegir un treball a la llista
+     * 
+     * @param nouTreball treball a afegir
+     * @throws TreballNoValidException
+     */
     public void afegirTreball(Treball nouTreball) throws TreballNoValidException {
         if (nouTreball == null) {
             throw new TreballNoValidException("No es pot afegir un treball nul.");
@@ -74,6 +101,12 @@ public class LlistaTreball implements Serializable {
     }
 
     
+    /**
+     * Metode que cerca un treball per el seu codi identificador
+     * 
+     * @param codi codi del treball a buscar
+     * @return l'objecte Treball trobat, sino null
+     */
     public Treball cercarCodi(String codi) {
         Treball trobat = null;
         if (codi != null) {
@@ -88,6 +121,13 @@ public class LlistaTreball implements Serializable {
         return trobat;
     }
 
+
+    /**
+     * Metode que elimina un treball de la llista que estigui en estat 'penndent'
+     * 
+     * @param codiTreball codi del treball que es vol cancel·lar
+     * @throws OperacioTreballNoPermesaException 
+     */
     public void cancelarTreballPendent(String codiTreball) throws OperacioTreballNoPermesaException {
         int index = -1;
         int i = 0;
@@ -114,6 +154,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que compta quants treballs te un usuari en estat 'pendent' o 'en curs'
+     * 
+     * @param aliesUsuari alies del usuari
+     * @return int; nombre total de treballs pendents/en curs
+     */
     public int comptarTreballsPendentsUsuari(String aliesUsuari) {
         int comptador = 0;
         for (int i = 0; i < numElements; i++) {
@@ -127,6 +173,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que retorna el treball que esta en estat 'en curs' en una maquina concreta
+     * 
+     * @param codiMaquina codi de la maquina
+     * @return el treball en curs, sino null si la maquina es lliure
+     */
     public Treball obtenirTreballEnCurs(int codiMaquina) {
         Treball enCurs = null;
         int i = 0;
@@ -142,6 +194,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que retorna el primer treball 'pendent' d'una maquina segons l'ordre de sol·licitud
+     * 
+     * @param codiMaquina codi de la maquina
+     * @return el treball pendent, o null si no n'hi ha
+     */
     public Treball obtenirSeguentTreballPendent(int codiMaquina) {
         Treball seguent = null;
         int i = 0;
@@ -156,6 +214,14 @@ public class LlistaTreball implements Serializable {
         return seguent;
     }
 
+
+    /**
+     * Metode que inicia el seguent treball pendent d'una maquina
+     * 
+     * @param codiMaquina codi de la maquina
+     * @return el treball que passa en estat 'en curs'
+     * @throws OperacioTreballNoPermesaException
+     */
     public Treball iniciarSeguentTreballMaquina(int codiMaquina) throws OperacioTreballNoPermesaException {
         if (obtenirTreballEnCurs(codiMaquina) != null) {
             throw new OperacioTreballNoPermesaException(
@@ -170,6 +236,15 @@ public class LlistaTreball implements Serializable {
         return seguent;
     }
 
+
+    /**
+     * Metode que finalitza el treball que esta en curs de la maquina
+     * 
+     * @param codiMaquina codi de la maquina
+     * @param dataFi dara i hora en que s'acaba el treball
+     * @return treball finalitzat
+     * @throws OperacioTreballNoPermesaException
+     */
     public Treball finalitzarTreballActualMaquina(int codiMaquina, Data dataFi)
             throws OperacioTreballNoPermesaException {
         Treball enCurs = obtenirTreballEnCurs(codiMaquina);
@@ -182,6 +257,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que calcula el temps total d'espera d'una maquina sumant les hores
+     * del treball en curs i tots els treballs pendents
+     * @param codiMaquina codi de la mquina
+     * @return total d'hores acumulades 
+     */
     public double calcularTempsEsperaMaquina(int codiMaquina) {
         double horesTotals = 0.0;
         for (int i = 0; i < numElements; i++) {
@@ -195,6 +276,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que retorna una subllista amb els treballs pendents d'una maquina ordenats per data de sol·licitud
+     * 
+     * @param codiMaquina codi de la maquina
+     * @return nova llistaTreball amb els treballs pendents 
+     */
     public LlistaTreball obtenirPendentsMaquina(int codiMaquina) {
         LlistaTreball resultat = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
@@ -208,6 +295,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que retorna una subllista amb els treballs pendents o en curs d'un usuari
+     * 
+     * @param aliesUsuari alies de l'usuari
+     * @return nova llistaTreballs amb els treballs actius del usuari
+     */
     public LlistaTreball obtenirPendentsUsuari(String aliesUsuari) {
         LlistaTreball resultat = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
@@ -220,6 +313,11 @@ public class LlistaTreball implements Serializable {
         return resultat;
     }
 
+    /**
+     * Metode que retorna tots els treballs en estat 'pendent' ordenats per sol·licitud
+     * 
+     * @return nova llistaTreballs amb tots els treballs pendents
+     */
     public LlistaTreball obtenirTotsPendents() {
         LlistaTreball pendents = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
@@ -231,6 +329,14 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que retorna els treballs acabats d'un usuari en un mes i any concrets
+     * 
+     * @param aliesUsuari alies del usuari
+     * @param mes mes del treball (1-12)
+     * @param any any del treball
+     * @return nova llistaTreballs amb els treballs acabats en aquell periode de temps 
+     */
     public LlistaTreball obtenirTreballsAcabatsUsuariMes(String aliesUsuari, int mes, int any) {
         LlistaTreball factura = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
@@ -248,6 +354,13 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que retorna els treballs acabats entre dues dates per calcular la recaptacio
+     * 
+     * @param inici data i hora inicial del rang
+     * @param fi data i hora final del rang
+     * @return nova llistaTreballs amb els treballs acabats dins del periode marcat
+     */
     public LlistaTreball obtenirTreballsAcabatsEntreDates(Data inici, Data fi) {
         LlistaTreball acabats = new LlistaTreball();
         for (int i = 0; i < numElements; i++) {
@@ -264,6 +377,14 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que calcula les hores d'us d'una maquina concreta a partir dels treballs acabats entre dos dates
+     * 
+     * @param codiMaquina codi numeric de la maquina
+     * @param inici data i hora inicial del rang
+     * @param fi data i hora final del rang
+     * @return total hores d'us
+     */
     public double calcularHoresUsMaquinaEntreDates(int codiMaquina, Data inici, Data fi) {
         double hores = 0.0;
         for (int i = 0; i < numElements; i++) {
@@ -281,6 +402,12 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que calcula les hores totals utilitzades per a un usuari en treballs acabats
+     * 
+     * @param aliesUsuari alies del usuari
+     * @return total d'hores acumulades
+     */
     public double calcularHoresTotalsUsuari(String aliesUsuari) {
         double hores = 0.0;
         for (int i = 0; i < numElements; i++) {
@@ -294,6 +421,11 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode intern per omplir subllistes de resultats
+     * 
+     * @param t treball a inserir de la subllista
+     */
     private void inserirDirecte(Treball t) {
         if (numElements == llista.length) {
             ampliarCapacitat();
@@ -303,12 +435,27 @@ public class LlistaTreball implements Serializable {
     }
 
 
+    /**
+     * Metode que guarda tota la llisat de treballs en un fitxer binari serialitzat
+     * 
+     * @param rutaFitxer cami del fitxer de sortida
+     * @throws IOException
+     */
     public void guardarSerialitzat(String rutaFitxer) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(rutaFitxer))) {
             oos.writeObject(this);
         }
     }
 
+
+    /**
+     * Metode que carrega la llista de treballs des d'un fitxer binari serialitzat
+     * 
+     * @param rutaFitxer cami del fitxer d'entrada
+     * @return instancia de llistaTreballs recuperada del fitxer 
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static LlistaTreball carregarSerialitzat(String rutaFitxer)
             throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(rutaFitxer))) {

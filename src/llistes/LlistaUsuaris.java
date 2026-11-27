@@ -1,5 +1,9 @@
-package dades;
+package llistes;
 
+import dades.Empresa;
+import dades.Estudiant;
+import dades.Investigador;
+import dades.Usuari;
 import excepcions.*;
 
 public class LlistaUsuaris {

@@ -1,0 +1,8 @@
+ESTUDIANT;maria99;Maria Cinta;maria.cinta@estudiants.urv.cat;GEI;2023
+ESTUDIANT;marc24;Marc Rovira;marc.rovira@estudiants.urv.cat;GESST;2024
+ESTUDIANT;laia_bio;Laia Puig;laia.puig@estudiants.urv.cat;BioGEI;2022
+INVESTIGADOR;dr_garcia;Joan Garcia;joan.garcia@urv.cat;DEIM;PRJ-2026-01
+INVESTIGADOR;dra_soler;Anna Soler;anna.soler@urv.cat;DEEEA;PRJ-2026-08
+INVESTIGADOR;dr_marti;Pere Martí;pere.marti@urv.cat;DEQ;PRJ-2025-14
+EMPRESA;tech_tgn;TechTarragona SL;contacte@techtgn.cat;B43123456;Carlos López
+EMPRESA;proto_cat;ProtoCat Enginyeria;info@protocat.cat;B43987654;Marta Vidal

@@ -1,5 +1,9 @@
-package dades;
+package llistes;
 
+import dades.Maquina;
+import dades.MaquinaFilament;
+import dades.MaquinaLaser;
+import dades.MaquinaResina;
 import excepcions.*;
 import extras.*;
 
