@@ -2,8 +2,6 @@ package dades;
 
 import java.io.Serializable;
 
-//import javax.management.openmbean.OpenDataException;
-
 import excepcions.*;
 import extras.Data;
 
@@ -34,6 +32,16 @@ public class Treball implements Serializable {
             throw new TreballNoValidException("El treball ha de tenir una màquina i un usuari assignats.");
         }
 
+        if (maquina == null || usuari == null) {
+            throw new TreballNoValidException("El treball ha de tenir una màquina i un usuari assignats.");
+        }
+
+        if (material == null || (!material.equalsIgnoreCase(MATERIAL_FILAMENT)
+                && !material.equalsIgnoreCase(MATERIAL_RESINA)
+                && !material.equalsIgnoreCase(MATERIAL_CAP))) {
+            throw new TreballNoValidException("Tipus de material no vàlid: " + material);
+        }
+
         if (dataSolicitud == null) {
             throw new TreballNoValidException("La data de sol·licitud no pot ser nul·la.");
         }
@@ -46,6 +54,8 @@ public class Treball implements Serializable {
             throw new TreballNoValidException("La quantitat de material no pot ser negativa.");
         }
 
+        validarCompatibilitatMaquina(maquina, material.toLowerCase(), duradaH, quantitatMaterial);
+
         this.codi = codi;
         this.maquina = maquina;
         this.usuari = usuari;
@@ -57,6 +67,51 @@ public class Treball implements Serializable {
         this.dataFinalitzacio = null;
 
     }
+
+
+    /**
+     * Metode que comprova que el material, la durada maxima i la quantitat siguin compatibles amb el tipus de maquina
+     * @param m
+     * @param mat
+     * @param hores
+     * @param quantitat
+     * @throws TreballNoValidException
+     */
+    private void validarCompatibilitatMaquina(Maquina m, String mat, double hores, double quantitat)
+            throws TreballNoValidException {
+        if (m instanceof MaquinaFilament) {
+            if (!mat.equals(MATERIAL_FILAMENT)) {
+                throw new TreballNoValidException("Una impressora de filament nomes admet filament");
+            }
+            if (hores > 24) {
+                throw new TreballNoValidException("La durada màxima en impressora de filament es de 24h");
+            }
+            if (quantitat <= 0) {
+                throw new TreballNoValidException("Cal indicar una quantitat de filament superior a 0g");
+            }
+        } else if (m instanceof MaquinaResina) {
+            if (!mat.equals(MATERIAL_RESINA)) {
+                throw new TreballNoValidException("Una impressora de resina nomes admet resina");
+            }
+            if (hores > 12) {
+                throw new TreballNoValidException("La durada màxima en impressora de resina es de 12h");
+            }
+            if (quantitat <= 0) {
+                throw new TreballNoValidException("Cal indicar una quantitat de resina superior a 0ml");
+            }
+        } else if (m instanceof MaquinaLaser) {
+            if (!mat.equals(MATERIAL_CAP)) {
+                throw new TreballNoValidException("Una talladora laser no utilitza material del taller (ha de ser 'cap')");
+            }
+            if (hores > 2) {
+                throw new TreballNoValidException("La durada màxima en talladora làser es de 2 hores");
+            }
+            if (quantitat != 0) {
+                throw new TreballNoValidException("La quantitat de material en talladora laser ha de ser 0");
+            }
+        }
+    }
+
 
     public void iniciarTreball() throws OperacioTreballNoPermesaException {
         if (!this.estat.equals(ESTAT_PENDENT)) {
@@ -77,14 +132,15 @@ public class Treball implements Serializable {
         this.dataFinalitzacio = dataFi.copia();
     }
 
-    //public double calcularImportFinal() {
-        
-    //}
+    public double calcularImportFinal() {
+        double costUs = maquina.calcularCostMaquina(duradaH, quantitatMaterial);
+        return usuari.calcularImport(costUs);
+    }
 
 
     public int calcularDiesEspera(Data dataActual) {
         int diesEspera = 0;
-        if (dataActual == null) {
+        if (dataActual != null) {
             try {
                 int dies = this.dataSolicitud.numDiesAData(dataActual);
                 if (dies > 0) {
@@ -147,7 +203,7 @@ public class Treball implements Serializable {
         }
 
         return "Treball [" + codi + "]  - Maquina: " + maquina.getCodi() + 
-                " | Usuari: " + usuari + 
+                " | Usuari: " + usuari.getAlias() + 
                 " | Material: " + material + " (" + quantitatMaterial + ") " +
                 " | Durada: " + duradaH + "h " + 
                 " | Sol·licitat: " + dataSolicitud.toString() + 
