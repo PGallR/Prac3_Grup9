@@ -40,11 +40,11 @@ public class LlistaUsuaris {
     }
 
    /**
-     * Permet obtenir l'Nessim element de la llista de maquines
+     * Permet obtenir l'Nessim element de la llista de usuaris
      * @param index rep posicio de les dades que es vol consultar
      * @return retorna les dades
      */
-    public Usuari getUsuari(int index){
+    public Usuari getUsuari(int index) throws UsuariNoValidException{
         if(index>=0 && index<num_elem){
             return llista[index];
         }
@@ -57,17 +57,18 @@ public class LlistaUsuaris {
      * Afegeix una usuari nou a la llista
      * @param nou usuari
      */
-    public void afegirUsuari(Usuari nou) {
-    
-    if (nou == null){
+    public void afegirUsuari(Usuari nova) throws UsuariNoValidException{
+    int i=0;
+
+    if (nova == null){
         throw new UsuariNoValidException("No hi ha cap usuari que correspon.\n"); 
     }else{
         if (llistaPlena()) {
             ampliarCapacitat();
         }
 
-        if(trobarUsuari(nova.getAlias()==-1)){
-            int i=0;
+        if((trobarUsuari(nova.getAlias()))==-1){
+            i=0;
 
             while((i<num_elem)&&(llista[i].getAlias().compareTo(nova.getAlias())<0)){         //ordenar llista segons el codi
                 i++;
@@ -78,7 +79,7 @@ public class LlistaUsuaris {
             llista[j] = llista[j - 1];
         }
 
-        llista[i] = nova.copia();
+        llista[i] = nova; //.copia();
         num_elem++;
         }
     
@@ -98,6 +99,7 @@ public class LlistaUsuaris {
                 for (int i=0; i<num_elem; i++){
                     aux = aux + "\nIndex: "+i+" "+llista[i];
                 }
+                break;
 
             case 1:
                 for (int i=0; i<num_elem; i++){
@@ -105,6 +107,7 @@ public class LlistaUsuaris {
                         aux = aux + "\nIndex: "+i+" "+llista[i];
                     }     
                 }
+                break;
 
             case 2:
                 for (int i=0; i<num_elem; i++){
@@ -112,6 +115,7 @@ public class LlistaUsuaris {
                         aux = aux + "\nIndex: "+i+" "+llista[i];
                     }     
                 }
+                break;
 
             case 3:
                 for (int i=0; i<num_elem; i++){
@@ -119,6 +123,7 @@ public class LlistaUsuaris {
                         aux = aux + "\nIndex: "+i+" "+llista[i];
                     }     
                 }
+                break;
         }
         
         return aux;
@@ -129,12 +134,12 @@ public class LlistaUsuaris {
      * @param alias de l'usuari que es vol tractar
      * @return dades de l'usuari
      */
-    public String mostrarUsuari(String alias){
+    public String mostrarUsuari(String alias) throws UsuariNoValidException{
         String aux = null;
 
         int index = trobarUsuari(alias);
         if(index != -1){                     
-            aux = "USUARI: " +llista[i]+"\n";
+            aux = "USUARI: " +llista[index]+"\n";
         }else{
             throw new UsuariNoValidException("No s'ha pogut trobar l'usuari.\n");
         }
@@ -189,11 +194,11 @@ public class LlistaUsuaris {
     /**
      * Amplia la capacitat d'una llista d'usuaris al doble
      */
-    private boolean ampliarCapacitat(){
-        LlistaUsuaris[] nova = new LlistaUsuaris[llista.length * 2];      //augmenta la capacitat al doble
+    private void ampliarCapacitat(){
+        Usuari[] nova = new Usuari[llista.length * 2];      //augmenta la capacitat al doble
         
         for (int i = 0; i < num_elem; i++) {
-            nou[i] = llista[i];
+            nova[i] = llista[i];
         }
         
         llista = nova;

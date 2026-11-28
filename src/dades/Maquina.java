@@ -80,9 +80,8 @@ public abstract class Maquina {
 
    //COPIA
    //public Maquina creaCopia(){
-       //return new Maquina (this.codi, this.model, this.laboratori);
+     //  return new Maquina (this.codi, this.model, this.laboratori);
    //}
-
 
    //CALCUL COST
    public abstract double calcularCostMaquina(double temps, double material);
